@@ -7,14 +7,9 @@ app = Flask(__name__)
 
 baseDir = "./content/"
 
-content = ""
-with open(baseDir+'index.md', 'r') as f:
-    content = f.read()
-
-
 @app.route("/")
 def index():
-    return render_template('layout.html', content=content.strip())
+    return render_template('layout.html', content=open(baseDir+'index.md', 'r').read().strip(), isContent=False)
 
 @app.route('/<path:path>', methods=['POST','GET'])
 def serve_file(path):
@@ -33,7 +28,7 @@ def serve_file(path):
         with open(baseDir+path+'.md','r') as f:
             content = f.read()
             
-        return render_template('layout.html', content=content.strip(), path='/'+path)
+        return render_template('layout.html', content=content.strip(), path='/'+path, isContent=True)
     else:
         pass
 

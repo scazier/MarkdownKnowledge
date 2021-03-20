@@ -29,7 +29,9 @@
     
 
     <div class="upper-content" id="">
+      {% if isContent %}
       <button type="button" class="btn btn-outline-dark" id="btn-edit">Edit</button>
+      {% endif %}
       <div class="row full-height">
         <div class="col-sm-6 full-height" id="source-container">
           <form method='POST' action="{{ path }}" class="full-height">
