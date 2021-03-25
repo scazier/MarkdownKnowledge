@@ -31,6 +31,7 @@ def create():
         filePath = dirPath+newDirName
         if newDirName != '':
             os.mkdir('./content/'+filePath)
+            utils.create_summary('./content/'+filePath+'/')
 
         with open('./content/'+filePath+'/'+filename+'.md','w') as f:
             f.write("<h1 align=\"center\" style=\"font-size:60px\">"+filename+"</h1>")
@@ -52,6 +53,9 @@ def serve_file(path):
     if path[-1] == '/':
         path = path[:-1]
 
+    if path[-1] == 'index':
+        utils.create_summary(baseDir+path.replace('index',''))
+
     if os.path.isfile(baseDir+path+'.md'):
         content = ""
 
@@ -64,8 +68,6 @@ def serve_file(path):
             content = f.read()
             
         return render_template('layout.html', content=content.strip(), path='/'+path, isContent=True)
-    else:
-        pass
 
 if __name__ == "__main__":
     app.run(debug=True)

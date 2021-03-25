@@ -2,25 +2,32 @@ import os
 import sys
 from itertools import chain
 
-def list_files(startpath):
-    with open(startpath+"index.md","w") as tree:
-        tree.write("<h1 align=\"center\" style=\"font-size:60px\">Contents</h1>\n\n")
-        for root, dirs, files in os.walk(startpath):
-            level = root.replace(startpath, '').count(os.sep)
-            indent = ' ' * 4 * (level)
-            if os.path.basename(root) not in ['', 'scripts']:
-                tree.write('{}* [{}](/{})\n'.format(indent, os.path.basename(root).capitalize(), os.path.join(os.path.basename(root),'index')))
+baseDir = './content/'
+
+def sub_create_summary(startpath, f, depth, indent):
+    if depth == 0:
+        path = startpath.split('/')
+        name = path[-1] if path[-1] != '' else path[-2]
+        f.write("<h1 align=\"center\" style=\"font-size:60px\">"+name.capitalize()+"</h1>\n\n")
+   
+    elts = os.listdir(startpath)
+    if elts != []:
+        for elt in elts:
+            filepath = startpath+elt
+            if os.path.isfile(startpath+elt):
+                if filepath.find('index') == -1 and elt[0] != '.':
+                    f.write('{}* [{}]({})\n'.format(indent*4*' ', elt.replace('.md','').capitalize(), filepath.replace(baseDir, '').replace('.md','')))
             else:
-                continue
+                if elt not in ['scripts']:
+                    filepath = filepath + '/index'
+                    f.write('{}* [{}]({})\n'.format(indent*4*' ', elt.capitalize(), filepath.replace(baseDir, '')))
+                    sub_test_summary(startpath+elt+'/', f, depth+1, indent+1)
+    else:
+        return
 
-            subindent = ' ' * 4 * (level + 1)
-            for f in files:
-                #print(os.path.basename(root))
-                #print('`{}`'.format(os.path.basename(root)))
-                if f[0] != '.' and f not in ['', 'index.md'] and os.path.basename(root) not in ['scripts']:
-                    tree.write('{}* [{}](/{})\n'.format(subindent, f.split('.')[0].capitalize(), os.path.join(os.path.basename(root),f.split('.')[0])))
-
-list_files("./content/")
+def create_summary(startpath):
+    with open(startpath+"index.md","w") as tree:
+        sub_test_summary(startpath, tree, 0, 0)
 
 def list_directories(startpath):
     dirs = [x[0].replace('./content/','') for x in os.walk(startpath)]
