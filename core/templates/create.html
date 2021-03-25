@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block data %}
+  <form method='POST' action="/create">      
+    <div class="jumbotron main-content">
+      <div class = "container">
+        <h2 align="center">Create a page</h2>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Page Name</span>
+          </div>
+          <input type="text" class="form-control" id="new-page-name" aria-describedby="validatedInputGroupPrepend" name="filename" required>
+        </div>
+        <div class="form-check" id="new-directory-checkbox">
+          <input class="form-check-input" type="checkbox" name="isInNewDirectory">
+          <label class="form-check-label" for="defaultCheck1">
+            Create the page in a new directory
+          </label>
+        </div>
+        <div id="directory-container">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="validatedInputGroupPrepend">Dir. Name</span>
+            </div>
+            <input class="form-control" id="newDirName" type="text" name="new-directory-name" placeholder="Name...">
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="validatedInputGroupPrepend">Directory</span>
+          </div>
+          <input class="form-control" id="newDirPath" type="text" name="directory-path" placeholder="Search here...">
+        </div>
+        <br>
+        <div style="overflow-y: auto; height:400px;">
+          <ul class = "list-group" id = "newList">
+            {% for directory in directories %}
+            <li class = "list-group-item">{{ directory }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-outline-success" id="btn-update">Save</button>
+    </div>
+  </form>
+  <script>
+    $(document).ready(function(){
+      $("#newDirPath").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#newList li").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+  
+      $('input[type="checkbox"]').click(function (){
+        if ($(this).prop("checked")){
+          $("#directory-container").show();
+        }
+        else{
+          $("#directory-container").hide();
+        }
+      });
+
+      $('li.list-group-item').click(function (){
+        $('#newDirPath').val($(this).text());
+      });
+
+      $("#new-page-name").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        var input = $('#new-page-name');
+        $.ajax({
+          url: "/checkName",
+          type: 'POST',
+          data: {
+            name: $('#new-page-name').val(),
+          },
+          success: function(result){
+            if (input.val() === ''){
+              input.removeClass('is-invalid');
+              input.removeClass('is-valid');
+            }
+            else{
+              if (result.res){
+                input.removeClass('is-invalid')
+                input.addClass('is-valid')
+              }
+              else{
+                input.removeClass('is-valid');
+                input.addClass('is-invalid');
+              }
+            }
+          }
+        });
+      });
+    });
+  </script>
+{% endblock %}

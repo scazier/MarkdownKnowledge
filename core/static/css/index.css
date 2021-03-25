@@ -154,7 +154,7 @@ body {
 #source-container{
   display: none;
 }
-#btn-edit{
+#btn-edit, #btn-create{
   margin: 4px;
   float: right;
 }
@@ -169,4 +169,27 @@ pre{
   background-color: #f5f5f5;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+.main-content{
+  position: absolute;
+  width: 50%;
+  left: 25%;
+  top: 100px;
+}
+.input-group{
+  margin: 10px 0px;
+}
+#directory-container{
+  display: none;
+}
+li.list-group-item{
+  cursor: pointer;
+}
+li.list-group-item:hover{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  z-index: 1;
+}
+.cr-edit{
+  display: flex;
+  margin: 10px;
 }
