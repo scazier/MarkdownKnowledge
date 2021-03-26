@@ -78,4 +78,4 @@ def serve_file(path):
         return render_template('layout.html', content=content.strip(), path='/'+path, isContent=True)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

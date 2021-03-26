@@ -16,11 +16,11 @@ def sub_create_summary(startpath, f, depth, indent):
             filepath = startpath+elt
             if os.path.isfile(startpath+elt):
                 if filepath.find('index') == -1 and elt[0] != '.':
-                    f.write('{}* [{}]({})\n'.format(indent*4*' ', elt.replace('.md','').capitalize(), filepath.replace(baseDir, '').replace('.md','')))
+                    f.write('{}* [{}](/{})\n'.format(indent*4*' ', elt.replace('.md','').capitalize(), filepath.replace(baseDir, '').replace('.md','')))
             else:
                 if elt not in ['scripts']:
                     filepath = filepath + '/index'
-                    f.write('{}* [{}]({})\n'.format(indent*4*' ', elt.capitalize(), filepath.replace(baseDir, '')))
+                    f.write('{}* [{}](/{})\n'.format(indent*4*' ', elt.capitalize(), filepath.replace(baseDir, '')))
                     sub_create_summary(startpath+elt+'/', f, depth+1, indent+1)
     else:
         return
