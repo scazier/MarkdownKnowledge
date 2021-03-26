@@ -48,12 +48,20 @@ def checkName():
 
     return jsonify(data)
 
+@app.route('/search', methods=['POST'])
+def search():
+    keyword = request.form['search']
+    files = utils.search(keyword)
+
+    return render_template('search.html', files=files)
+
 @app.route('/<path:path>', methods=['POST','GET'])
 def serve_file(path):
     if path[-1] == '/':
         path = path[:-1]
 
-    if path[-1] == 'index':
+    if path.split('/')[-1] == 'index':
+        print(baseDir+path.replace('index',''))
         utils.create_summary(baseDir+path.replace('index',''))
 
     if os.path.isfile(baseDir+path+'.md'):

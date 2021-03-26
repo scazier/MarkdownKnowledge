@@ -21,13 +21,13 @@ def sub_create_summary(startpath, f, depth, indent):
                 if elt not in ['scripts']:
                     filepath = filepath + '/index'
                     f.write('{}* [{}]({})\n'.format(indent*4*' ', elt.capitalize(), filepath.replace(baseDir, '')))
-                    sub_test_summary(startpath+elt+'/', f, depth+1, indent+1)
+                    sub_create_summary(startpath+elt+'/', f, depth+1, indent+1)
     else:
         return
 
 def create_summary(startpath):
     with open(startpath+"index.md","w") as tree:
-        sub_test_summary(startpath, tree, 0, 0)
+        sub_create_summary(startpath, tree, 0, 0)
 
 def list_directories(startpath):
     dirs = [x[0].replace('./content/','') for x in os.walk(startpath)]
@@ -44,5 +44,33 @@ def list_files(startpath):
             files.remove(files[i])
         
         files[i] = files[i].split('.')[0]
+
+    return files
+
+def search(keyword):
+    files = []
+
+    def fileCrawler(word, path):
+        elts = os.listdir(path)
+        if elts != []:
+            for elt in elts:
+                if os.path.isfile(path+elt):
+                    if elt.find('index') == -1:
+                        with open(path+elt,'r') as f:
+                            content = f.read()
+                            if word in content:
+                                d = {}
+                                d['name'] = elt.replace('.md','').capitalize()
+                                d['path'] = path.replace('./content/','')+elt.replace('.md','')
+                                d['count'] = content.count(word)
+                                files.append(d)
+
+                else:
+                    if elt not in ['scripts']:
+                        fileCrawler(word, path+elt+'/')
+        else:
+            return
+
+    fileCrawler(keyword, baseDir)
 
     return files
