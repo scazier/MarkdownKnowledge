@@ -6,13 +6,13 @@
 {% endblock %}
 
 {% block data %}
+  {% if isContent %}
   <div class="cr-edit">
     <button type="button" class="btn btn-outline-dark" id="btn-edit">Edit</button>
     <button type="button" class="btn btn-outline-success" id="btn-create" onclick="window.location.href='/create'">Create</button>
   </div>
+  {% endif %}
   <div class="upper-content" id="">
-    {% if isContent %}
-    {% endif %}
     <div class="row full-height">
       <div class="col-sm-6 full-height" id="source-container">
         <form method='POST' action="{{ path }}" class="full-height">
@@ -21,7 +21,7 @@
           <a href="{{ path }}" class="btn btn-outline-danger" id="btn-cancel">Cancel</a>
         </form>
       </div>
-      <div class="col full-height" id="result-container">
+      <div class="col full-height" id="result-container" style="font-size: 12px;">
         <div class="result-html full-height"></div>
       </div>
     </div>
@@ -32,7 +32,8 @@
           if (!$("#source-container").is(':visible')){
             $("#source-container").show();
             $(".upper-content").addClass("full-height container");
-            $("#result-container").removeClass("col").addClass("col-sm-6");
+            $("#result-container").removeClass("col").addClass("col-sm-6").css("font-size","10px");
+            $(".row").addClass("edit-page-container");
             $("#btn-edit").hide();
             $('#btn-create').hide();
           }

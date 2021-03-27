@@ -64,9 +64,8 @@ def serve_file(path):
         print(baseDir+path.replace('index',''))
         utils.create_summary(baseDir+path.replace('index',''))
 
+    content = ""
     if os.path.isfile(baseDir+path+'.md'):
-        content = ""
-
         if request.method == 'POST':
             updated_content = request.form['content']
             with open(baseDir+path+'.md','w') as f:
@@ -74,8 +73,15 @@ def serve_file(path):
 
         with open(baseDir+path+'.md','r') as f:
             content = f.read()
+        content = content.strip()
+    
+    if path.split('/')[0] == 'scripts':
+        content += "<h1 align='center'>"+path.split('/')[-1]+"</h1>\n"
+        with open(baseDir+path,'r') as f:
+            for line in f:
+                content += "\t" + line
             
-        return render_template('layout.html', content=content.strip(), path='/'+path, isContent=True)
+    return render_template('layout.html', content=content, path='/'+path, isContent=True)
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
